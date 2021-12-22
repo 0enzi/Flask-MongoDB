@@ -9,7 +9,20 @@ api = Api(app)
 
 # Init Database
 client = MongoClient("mongodb://db:27017")
+db = client.aNewDb
+UserNum = db["UserNum"]
 
+UserNum.insert({
+    'num_of_users':0
+})
+
+class Visit(Resource):
+    def get(self):
+        prev_num = UserNum.find({})[0]["num_of_users"]
+        new_num = prev_num+1
+
+        #update db
+        UserNum.update({}, {'$set': {'num_of_users':new_num}})
 
 # Resource
 class Operation(Resource):
