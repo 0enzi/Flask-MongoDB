@@ -1,1 +1,1 @@
-FROM python:3.9
+FROM mongo:3.6.12

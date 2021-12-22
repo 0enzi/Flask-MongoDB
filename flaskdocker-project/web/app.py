@@ -7,14 +7,14 @@ from pymongo import MongoClient
 app = Flask(__name__)
 api = Api(app)
 
-# Init Database
+#->> initialize a new client:
+# db is the name of the folder that have the Dockerfile of mongoDB
+# default port used by mongoDB: 27017
 client = MongoClient("mongodb://db:27017")
-db = client.aNewDb
-UserNum = db["UserNum"]
+db = client["aNewDB"]                              # create a new DB named as aNewDB
+UserNum = db["UserNum"]                         # create a collection
 
-UserNum.insert({
-    'num_of_users':0
-})
+UserNum.insert_one({"num_of_users":0})
 
 class Visit(Resource):
     def get(self):
@@ -22,7 +22,8 @@ class Visit(Resource):
         new_num = prev_num+1
 
         #update db
-        UserNum.update({}, {'$set': {'num_of_users':new_num}})
+        UserNum.update_one({}, {'$set': {'num_of_users':new_num}})
+        return "Hello user number "+ str(new_num)
 
 # Resource
 class Operation(Resource):
@@ -63,5 +64,6 @@ class Operation(Resource):
 
 # Setup links and run!        
 api.add_resource(Operation, '/calc')
-app.run(host="0.0.0.0", port="3000")
+api.add_resource(Visit, '/')
+app.run(host="0.0.0.0", port="3000", debug=True)
 
