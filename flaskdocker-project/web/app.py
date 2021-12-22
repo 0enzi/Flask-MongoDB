@@ -1,9 +1,14 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from pymongo import MongoClient
+
 
 # Init Flask and API
 app = Flask(__name__)
 api = Api(app)
+
+# Init Database
+client = MongoClient("mongodb://db:27017")
 
 
 # Resource
